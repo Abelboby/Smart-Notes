@@ -72,7 +72,7 @@ An innovative web-based platform to create, edit, and share notes effortlessly, 
 
 | Login Page                              | Notes Page                              | Shared Notes Section                              |  
 |-----------------------------------------|-----------------------------------------|--------------------------------------------------|  
-| ![Login Page](./screenshots/login.png)  | ![Notes Page](./screenshots/notes.png)  | ![Shared Notes](./screenshots/shared_notes.png)  |  
+| ![Login Page](./screenshots/login.png)  | ![Notes Page](./screenshots/notes.png)  | ![Shared Notes](./screenshots/shared.png)  |  
 
 | AI Assistant                            | Edit Notes                              | Share Note Modal                                |  
 |-----------------------------------------|-----------------------------------------|------------------------------------------------|  
@@ -101,12 +101,12 @@ src/
 
 1. Clone this repository:  
    ```bash  
-   git clone https://github.com/your-username/notes-sharing-platform.git  
+   git clone https://github.com/Abelboby/Smart-Notes.git
    ```  
 
 2. Navigate to the project directory:  
    ```bash  
-   cd notes-sharing-platform  
+   cd Smart-Notes  
    ```  
 
 3. Install dependencies:  
@@ -160,16 +160,5 @@ We welcome contributions! Feel free to fork this repository, open a pull request
 ## 📧 Contact  
 
 For any inquiries or feedback, feel free to contact me at:  
-**Email**: your-email@example.com  
-**GitHub**: [your-username](https://github.com/your-username)  
-
----
-
-```
-
-### Instructions to Use
-1. Replace `your-username` with your actual GitHub username.
-2. Add your email address in the **Contact** section.
-3. Save your screenshots in the `./screenshots/` directory and update the file paths in the **Screenshots** section.
-
-Let me know if you need further customizations! 😊
+**Email**: abeldavisboby@example.com  
+**GitHub**: [Abelboby](https://github.com/Abelboby)  
