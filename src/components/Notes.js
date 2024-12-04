@@ -1,5 +1,4 @@
-// src/components/Notes.js
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   collection,
   addDoc,
@@ -12,11 +11,13 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
-import { FaTrash, FaShareAlt, FaEdit } from "react-icons/fa";
-import AiAssistant from './AiAssistant'; // Import the AI assistant component
+import { useNavigate } from "react-router-dom";
+import { FaTrash, FaShareAlt, FaEdit, FaPlus } from "react-icons/fa";
+import AiAssistant from './AiAssistant';
+import { signOut } from "firebase/auth";
+
+
 Modal.setAppElement("#root");
 
 const customModalStyle = {
@@ -27,10 +28,17 @@ const customModalStyle = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    width: '80%', // Set width to 80% of the screen
-    maxHeight: '80%', // Limit max height of modal
-    padding: '20px', // Add padding for better spacing
-    overflow: 'hidden', // Hide overflow to prevent scrollbars
+    width: '80%',
+    maxHeight: '80%',
+    padding: '0',
+    border: 'none',
+    borderRadius: '0.75rem',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backdropFilter: 'blur(4px)',
   },
 };
 
@@ -175,110 +183,117 @@ const Notes = ({ user }) => {
     setViewSharedNoteContent(note.content);
     setViewSharedNoteModalIsOpen(true);
   };
-
   return (
-    <div className="p-6 relative min-h-screen">
-      {/* Logout Button in Top-Right Corner */}
-      {user && (
-        <div className="absolute top-4 right-4">
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white p-2 rounded shadow-md hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
-      )}
-
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 px-6 py-8">
       {/* Input Area */}
-      <div className="mb-4 flex justify-center items-center">
-        <div className="bg-white p-4 rounded-md shadow-md w-full max-w-3xl flex">
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Note Title"
-            className="w-1/3 p-2 border-none focus:outline-none mr-2"
-          />
-          <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Take a note..."
-            className="w-full p-2 border-none focus:outline-none resize-none"
-            rows={5}
-          />
-          <button
-            onClick={addNote}
-            className="ml-2 bg-blue-500 text-white p-2 rounded shadow-md hover:bg-blue-600"
-          >
-            Add
-          </button>
+      <div className="mb-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto transform transition-all duration-200 hover:shadow-xl">
+          <div className="space-y-4">
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Note Title"
+              className="w-full px-4 py-2 text-lg font-semibold bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            />
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Take a note..."
+              className="w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
+              rows={5}
+            />
+            <button
+              onClick={addNote}
+              className="flex items-center justify-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md"
+            >
+              <FaPlus className="mr-2" />
+              Add Note
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Personal Notes Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {notes.map((note) => (
-          <div
-            key={note.id}
-            className="bg-yellow-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 relative break-words cursor-pointer"
-            onClick={() => openEditModal(note)}
-          >
-            <div className="absolute top-2 right-2 flex space-x-2">
-              <FaTrash
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteNote(note.id);
-                }}
-                className="text-gray-600 hover:text-red-500 cursor-pointer"
-              />
-              <FaShareAlt
-                onClick={(e) => {
-                  e.stopPropagation();
-                  shareNote(note.id);
-                }}
-                className="text-gray-600 hover:text-blue-500 cursor-pointer"
-              />
-              <FaEdit
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openEditModal(note);
-                }}
-                className="text-gray-600 hover:text-green-500 cursor-pointer"
-              />
-            </div>
-            <h3 className="font-bold">{note.title}</h3>
-            <div>{note.content.substring(0, 100)}...</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Shared Notes Section */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">Shared Notes</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {sharedNotes.map((note) => (
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Personal Notes</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {notes.map((note) => (
             <div
               key={note.id}
-              className="bg-green-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 relative break-words cursor-pointer"
-              onClick={() => openViewSharedNoteModal(note)} // Open view shared note modal
+              className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 cursor-pointer"
+              onClick={() => openEditModal(note)}
             >
-              <h3 className="font-bold">{note.title}</h3>
-              <p>{note.content.substring(0, 100)}...</p>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteSharedNote(note.id);
-                }}
-                className="bg-red-500 text-white p-2 rounded mt-2"
-              >
-                Delete Shared Note
-              </button>
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{note.title}</h3>
+                <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteNote(note.id);
+                    }}
+                    className="p-2 text-gray-600 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors duration-200"
+                  >
+                    <FaTrash size={14} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      shareNote(note.id);
+                    }}
+                    className="p-2 text-gray-600 hover:text-blue-500 rounded-full hover:bg-blue-50 transition-colors duration-200"
+                  >
+                    <FaShareAlt size={14} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openEditModal(note);
+                    }}
+                    className="p-2 text-gray-600 hover:text-green-500 rounded-full hover:bg-green-50 transition-colors duration-200"
+                  >
+                    <FaEdit size={14} />
+                  </button>
+                </div>
+              </div>
+              <p className="text-gray-600 line-clamp-3">{note.content}</p>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Shared Notes Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Shared Notes</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {sharedNotes.map((note) => (
+            <div
+              key={note.id}
+              className="group bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1 cursor-pointer"
+              onClick={() => openViewSharedNoteModal(note)}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{note.title}</h3>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteSharedNote(note.id);
+                  }}
+                  className="opacity-0 group-hover:opacity-100 p-2 text-gray-600 hover:text-red-500 rounded-full hover:bg-red-50 transition-all duration-200"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </div>
+              <p className="text-gray-600 line-clamp-3">{note.content}</p>
+              <div className="mt-4 text-sm text-gray-500">
+                Shared by: {note.sharedBy}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      
       {/* Share Note Modal */}
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={customModalStyle}>
         <h2 className="text-lg font-bold">Share Note</h2>
@@ -378,8 +393,7 @@ const Notes = ({ user }) => {
         </button>
       </Modal>
 
-      {/* AI Assistant Component */}
-      <AiAssistant notes={notes} /> {/* Pass notes to the AI Assistant */}
+      <AiAssistant notes={notes} />
     </div>
   );
 };
